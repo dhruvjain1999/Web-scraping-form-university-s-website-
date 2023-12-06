@@ -1,0 +1,281 @@
+---
+title: "Web_scraping"
+author: "Dhruv"
+date: "2023-10-21"
+output: html_document
+---
+
+
+```{r}
+library(rvest)
+library(tidyverse)
+library(repurrrsive)
+library(listviewer)
+library(conflicted)
+library(data.table)
+library(textdata)
+library(tidytext)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(wordcloud)
+library(RColorBrewer)
+library(wordcloud2)
+library(conflicted)
+library(data.table)
+library(dbplyr)
+library(dplyr)
+library(ggforce)
+library(ggmap)
+library(ggmosaic)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(keep)
+library(listviewer)
+library(MASS)
+library(mapview)
+library(Matrix)
+library(olsrr)
+library(purrr)
+library(plotly)
+library(readr)
+library(repurrrsive)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(RColorBrewer)
+library(rvest)
+library(sf)
+library(SnowballC)
+library(textdata)
+library(tibble)
+library(tidytext)
+library(tidyverse)
+library(tm)
+library(wordcloud)
+library(usmap)
+library(leaflet)
+library(viridis)
+
+
+```
+
+```{r}
+
+Jackson_uni_business_1 = read_html("https://ju.smartcatalogiq.com/2022-2023/academic-catalog/graduate/graduate-programs/davis-college-of-business-graduate-programs/master-of-business-administration/concentrations/fintech-mba-concentration/")
+
+Jackson_uni_business_2 = Jackson_uni_business_1%>% 
+  html_nodes(".sc-programtable-column-2 , .sc-programtable-column-1 , .sc-RequiredCoursesHeading1 , .sc-BodyText , .degreeTitle")%>%
+  html_text()
+# Combine all elements into a single string
+Jackson_uni_business <- paste(Jackson_uni_business_2, collapse = " ")
+# View(Jackson_uni_business)
+
+Jackson_uni_sci_marine_1 = read_html("https://ju.smartcatalogiq.com/en/2023-2024/academic-catalog/graduate/graduate-programs/college-of-arts-and-sciences-graduate-programs/marine-science/")
+
+Jackson_uni_sci_marine_2 = Jackson_uni_sci_marine_1%>% 
+  html_nodes("#main li , #main p , h1")%>%
+  html_text()
+Jackson_uni_sci_marine <- paste(Jackson_uni_sci_marine_2, collapse = " ")
+# View(Jackson_uni_sci_marine)
+
+  
+Jackson_uni_sci_in_Health_1 = read_html("https://ju.smartcatalogiq.com/en/2022-2023/academic-catalog/graduate/graduate-programs/brooks-rehabilitation-college-of-healthcare-sciences-graduate-programs/school-of-applied-health-sciences-graduate-programs/master-of-science-degree-in-health-informatics/")
+
+Jackson_uni_sci_in_Health_2 = Jackson_uni_sci_in_Health_1%>% 
+  html_nodes(".sc-RequirementNarrative , .sc-programtable-column-2 , .sc-programtable-column-1 , .sc-RequiredCoursesHeading1 , h2 , #main li , .sc-SubHeading , .sc-BodyText , .degreeTitle")%>%
+  html_text()
+
+Jackson_uni_sci_in_Health <- paste(Jackson_uni_sci_in_Health_2, collapse = " ")
+# View(Jackson_uni_sci_in_Health)
+
+
+Jackson_uni_fine_arts_1 = read_html("https://ju.smartcatalogiq.com/2022-2023/academic-catalog/graduate/graduate-programs/linda-berry-stein-college-of-fine-arts-graduate-programs/master-of-fine-arts-in-choreography/")
+
+Jackson_uni_fine_arts_2 = Jackson_uni_fine_arts_1%>% 
+  html_nodes(".sc-programtable-column-2 , .sc-programtable-column-1 , .sc-RequiredCoursesHeading1 , h2 , .sc-SubHeading , .sc-BodyText , .degreeTitle")%>%
+  html_text()
+Jackson_uni_fine_arts <- paste(Jackson_uni_fine_arts_2, collapse = " ")
+#View(Jackson_uni_fine_arts)
+
+# Jackson_uni <- data.frame(Jackson_uni_business,
+#                           Jackson_uni_sci_marine,
+#                           Jackson_uni_sci_in_Health,
+#                           Jackson_uni_fine_arts)
+# View(Jackson_uni)
+# 
+
+# ----------------------------------------------------------------
+# Conatins all requiremsnts in one file for all degree  -- FLorida uni
+# ----------------------------------------------------------------
+florida_uni = read_html("https://www.fau.edu/registrar/university-catalog/catalog/degree-req/")
+
+florida_uni_1 = florida_uni%>% 
+  html_nodes("td , .style7 , #secbacc , #minor , li , #faas , p , #ugs , h1")%>%
+  html_text()
+florida_uni_data <- paste(florida_uni_1, collapse = " ")
+#View(Jackson_uni_fine_arts)
+
+
+# ----------------------------------------------------------------
+# univeristy of north florida  
+# ----------------------------------------------------------------
+
+uni_of_north_flo_mba = read_html("https://www.unf.edu/catalog/programs/gr/ccec/CCEC-MS-30CCISCISK.html")
+
+uni_of_north_flo_mba_1 = uni_of_north_flo_mba%>% 
+  html_nodes(".description , h3 , h2 , .degree , .major")%>%
+  html_text()
+uni_of_north_flo_mba_2 <- paste(uni_of_north_flo_mba_1, collapse = " ")
+#View(uni_of_north_flo_mba_2)
+
+
+
+uni_of_north_flo_healt = read_html("https://www.unf.edu/catalog/programs/gr/brooks/COH-MS-33HHIN.html")
+
+uni_of_north_flo_healt_1 = uni_of_north_flo_healt%>% 
+  html_nodes(".description , p , h3 , h2 , .degree , .major")%>%
+  html_text()
+uni_of_north_flo_healt_2 <- paste(uni_of_north_flo_healt_1, collapse = " ")
+# View(uni_of_north_flo_healt_2)
+
+
+
+uni_of_north_flo_cs_ds = read_html("https://www.unf.edu/catalog/programs/gr/ccec/CCEC-MS-30CCISCISJ.html")
+
+uni_of_north_flo_cs_ds_1 = uni_of_north_flo_cs_ds%>% 
+  html_nodes(".description , #mainContent li , h3 , #mainContent p , h2 , .degree , .conc , .major")%>%
+  html_text()
+uni_of_north_flo_cs_ds_2 <- paste(uni_of_north_flo_cs_ds_1, collapse = " ")
+# View(uni_of_north_flo_cs_ds_2)
+
+
+
+uni_of_north_flo_arts = read_html("https://www.unf.edu/catalog/programs/ug/coas/COAS-BFAAFARFAR9.html")
+
+uni_of_north_flo_arts_1 = uni_of_north_flo_arts%>% 
+  html_nodes(".description , p , h3 , .conc , .degree , .major")%>%
+  html_text()
+uni_of_north_flo_arts_2 <- paste(uni_of_north_flo_arts_1, collapse = " ")
+# View(uni_of_north_flo_arts_2)
+
+
+
+# ----------------------------------------------------------------
+# Saint Leo University
+# ----------------------------------------------------------------
+
+Saint_Leo_University_arts_psyco = read_html("https://academiccatalog.saintleo.edu/preview_program.php?catoid=63&poid=8782")
+
+Saint_Leo_University_arts_psyco_1 = Saint_Leo_University_arts_psyco%>% 
+  html_nodes(".acalog-course , .acalog-core:nth-child(1) h2 , #acalog-client-header p , #acalog-page-title")%>%
+  html_text()
+Saint_Leo_University_arts_psyco_2 <- paste(Saint_Leo_University_arts_psyco_1, collapse = " ")
+
+
+
+Saint_Leo_University_cs = read_html("https://academiccatalog.saintleo.edu/preview_program.php?catoid=63&poid=8789")
+
+Saint_Leo_University_cs_1 = Saint_Leo_University_cs%>% 
+  html_nodes(".block_content :nth-child(1)")%>%
+  html_text()
+Saint_Leo_University_cs_2 <- paste(Saint_Leo_University_cs_1, collapse = " ")
+
+
+
+Saint_Leo_University_health = read_html("https://academiccatalog.saintleo.edu/preview_program.php?catoid=63&poid=8735")
+
+Saint_Leo_University_health_1 = Saint_Leo_University_health%>% 
+  html_nodes(".acalog-core:nth-child(1) , #acalog-client-header p , #acalog-page-title")%>%
+  html_text()
+Saint_Leo_University_health_2 <- paste(Saint_Leo_University_health_1, collapse = " ")
+
+
+
+
+Saint_Leo_University_mba = read_html("https://academiccatalog.saintleo.edu/preview_program.php?catoid=63&poid=8732")
+
+Saint_Leo_University_mba_1 = Saint_Leo_University_mba%>% 
+  html_nodes(".acalog-core , .program_description li , #acalog-client-header p , h3 , #acalog-page-title")%>%
+  html_text()
+Saint_Leo_University_mba_2 <- paste(Saint_Leo_University_mba_1, collapse = " ")
+
+# ----------------------------------------------------------------
+# University of Central Florida - cannot due to restriction 
+# ----------------------------------------------------------------
+
+
+# ----------------------------------------------------------------
+# University of TAMPA - cannot due to restriction 
+# ----------------------------------------------------------------
+
+uni_of_tampa_fina = read_html("https://www.ut.edu/graduate-degrees/graduate-business/master-of-science-in-finance/ms-in-finance-admission")
+
+uni_of_tampa_fina_1 = uni_of_tampa_fina%>% 
+  html_nodes(".body-copy , p:nth-child(1) , .page-title")%>%
+  html_text()
+uni_of_tampa_fina_2 <- paste(uni_of_tampa_fina_1, collapse = " ")
+
+
+
+uni_of_tampa_it = read_html("https://ut.smartcatalogiq.com/current/catalog/graduate-and-continuing-studies/graduate-and-continuing-studies-degree-programs/graduate-study-in-the-college-of-business-cob/master-of-science-in-information-and-technology-management/")
+
+uni_of_tampa_it_1 = uni_of_tampa_it%>% 
+  html_nodes(".programTables , .sc-RequiredCoursesHeading1 , .sc-programtable-column-2 , .sc-programtable-column-1")%>%
+  html_text()
+uni_of_tampa_it_2 <- paste(uni_of_tampa_it_1, collapse = " ")
+
+
+uni_of_tampa_mba = read_html("https://ut.smartcatalogiq.com/current/catalog/graduate-and-continuing-studies/graduate-and-continuing-studies-degree-programs/graduate-study-in-the-college-of-business-cob/master-of-business-administration/")
+
+uni_of_tampa_mba_1 = uni_of_tampa_mba%>% 
+  html_nodes("p , .sc-programtable-column-1 , .sc-programtable-column-2 , .sc-RequiredCoursesHeading1 , strong , .degreeTitle")%>%
+  html_text()
+uni_of_tampa_mba_2 <- paste(uni_of_tampa_mba_1, collapse = " ")
+
+
+
+uni_of_tampa_nur = read_html("https://ut.smartcatalogiq.com/current/catalog/graduate-and-continuing-studies/graduate-and-continuing-studies-degree-programs/graduate-study-in-the-college-of-natural-and-health-sciences-cnhs/master-of-science-in-nursing/")
+
+uni_of_tampa_nur_1 = uni_of_tampa_nur%>% 
+  html_nodes(".credits , .sc-programtable-column-2 , .sc-programtable-column-1 , .sc-RequiredCoursesHeading1 , .sc-BodyText , .degreeTitle")%>%
+  html_text()
+uni_of_tampa_nur_2 <- paste(uni_of_tampa_nur_1, collapse = "")
+
+# ----------------------------------------------------------------
+# University of Florida
+# ----------------------------------------------------------------
+
+uni <- tibble(Jackson_uni_business,
+                  Jackson_uni_sci_marine,
+                  Jackson_uni_sci_in_Health,
+                  Jackson_uni_fine_arts,
+                  florida_uni_data,
+                  uni_of_north_flo_mba_2,
+                  uni_of_north_flo_healt_2,
+                  uni_of_north_flo_cs_ds_2,
+                  uni_of_north_flo_arts_2,
+                  Saint_Leo_University_arts_psyco_2,
+                  Saint_Leo_University_cs_2,
+                  Saint_Leo_University_mba_2,
+                  Saint_Leo_University_health_2,
+                  uni_of_tampa_fina_2,
+                  uni_of_tampa_it_2,
+                  uni_of_tampa_mba_2,
+                  uni_of_tampa_nur_2)
+# View(uni)
+
+# uni_transposed <- t(uni)
+
+# View(uni_transposed)
+nrow(uni)
+ncol(uni)
+# Save the transposed data frame to a CSV file
+file_path <- "C:/Users/Dhruv Jain/Desktop/uni_data.txt"
+# write.csv(uni_transposed, file = file_path, row.names = FALSE)
+
+write.csv(uni, file = file_path, row.names = TRUE)
+
+```
+
+
